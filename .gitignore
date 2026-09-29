@@ -1,0 +1,16 @@
+/node_modules/
+/coverage/
+test-results/
+playwright-report/
+
+user.js
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/

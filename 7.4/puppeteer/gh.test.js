@@ -1,17 +1,8 @@
-let page;
-
 describe("Github page tests", () => {
   beforeEach(async () => {
-    page = await browser.newPage();
     page.setDefaultTimeout(60000);
     page.setDefaultNavigationTimeout(60000);
     await page.goto("https://github.com/team");
-  }, 60000);
-
-  afterEach(async () => {
-    if (page) {
-      await page.close();
-    }
   }, 60000);
 
   test("The h1 header content", async () => {
@@ -44,19 +35,9 @@ describe("Github page tests", () => {
 });
 
 describe("Other GitHub pages tests", () => {
-  beforeEach(async () => {
-    page = await browser.newPage();
+  test("Header on Features page", async () => {
     page.setDefaultTimeout(60000);
     page.setDefaultNavigationTimeout(60000);
-  }, 60000);
-
-  afterEach(async () => {
-    if (page) {
-      await page.close();
-    }
-  }, 60000);
-
-  test("Header on Features page", async () => {
     await page.goto("https://github.com/features");
     await page.waitForSelector("h1", { timeout: 60000 });
     const title = await page.title();
@@ -64,6 +45,8 @@ describe("Other GitHub pages tests", () => {
   }, 60000);
 
   test("Header on Enterprise page", async () => {
+    page.setDefaultTimeout(60000);
+    page.setDefaultNavigationTimeout(60000);
     await page.goto("https://github.com/enterprise");
     await page.waitForSelector("h1", { timeout: 60000 });
     const title = await page.title();
@@ -71,6 +54,8 @@ describe("Other GitHub pages tests", () => {
   }, 60000);
 
   test("Header on Pricing page", async () => {
+    page.setDefaultTimeout(60000);
+    page.setDefaultNavigationTimeout(60000);
     await page.goto("https://github.com/pricing");
     await page.waitForSelector("h1", { timeout: 60000 });
     const title = await page.title();

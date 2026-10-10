@@ -1,17 +1,32 @@
-const { Given, When, Then, Before, After, setDefaultTimeout } = require("@cucumber/cucumber");
 const puppeteer = require("puppeteer");
 const { expect } = require("chai");
+const {
+  Given,
+  When,
+  Then,
+  Before,
+  After,
+  setDefaultTimeout,
+} = require("cucumber");
+const {
+  openSeance,
+  selectFreeSeat,
+  clickBookButton,
+  isBookButtonDisabled,
+  getTicketTitle,
+} = require("../../lib/booking.js");
+
+const { launch } = require("../../jest-puppeteer.config.js");
+
+const SEAT_TYPES = { standard: "standart", vip: "vip" };
 
 setDefaultTimeout(60000);
 
 Before(async function () {
-  this.browser = await puppeteer.launch({
-    headless: false,
-    executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-    defaultViewport: null,
-    args: ["--start-maximized"]
-  });
+  this.browser = await puppeteer.launch(launch);
   this.page = await this.browser.newPage();
+  this.page.setDefaultTimeout(15000);
+  this.page.setDefaultNavigationTimeout(30000);
 });
 
 After(async function () {
@@ -20,42 +35,28 @@ After(async function () {
   }
 });
 
-Given('user is on {string} page', async function (url) {
+Given("user is on {string} page", async function (url) {
   await this.page.goto(url);
 });
 
-When('user selects day {int} and time', async function (dayIndex) {
-  const daySelector = `nav.page-nav a:nth-child(${dayIndex})`;
-  await this.page.waitForSelector(daySelector);
-  await this.page.click(daySelector);
-
-  const timeSelector = ".movie-seances__time";
-  await this.page.waitForSelector(timeSelector);
-  await this.page.click(timeSelector);
+When("user selects day {int} and time", async function (day) {
+  await openSeance(this.page, day);
 });
 
-When('user selects standard seat', async function () {
-  const seatSelector = ".buying-scheme__chair_standart:not(.buying-scheme__chair_taken)";
-  await this.page.waitForSelector(seatSelector);
-  await this.page.click(seatSelector);
+When("user selects {word} seat", async function (type) {
+  await selectFreeSeat(this.page, SEAT_TYPES[type.toLowerCase()]);
 });
 
-When('user clicks booking button', async function () {
-  const buttonSelector = "button.acceptin-button";
-  await this.page.waitForSelector(buttonSelector);
-  await this.page.click(buttonSelector);
+When("user clicks booking button", async function () {
+  await clickBookButton(this.page);
 });
 
-Then('user sees text {string}', async function (expectedText) {
-  const titleSelector = ".ticket__check-title";
-  await this.page.waitForSelector(titleSelector);
-  const actualText = await this.page.$eval(titleSelector, (el) => el.textContent.trim());
-  expect(actualText).to.include(expectedText);
+Then("user sees text {string}", async function (text) {
+  const title = await getTicketTitle(this.page);
+  expect(title).to.contain(text);
 });
 
-Then('booking button is disabled', async function () {
-  const buttonSelector = "button.acceptin-button";
-  await this.page.waitForSelector(buttonSelector);
-  const isDisabled = await this.page.$eval(buttonSelector, (btn) => btn.disabled);
+Then("booking button is disabled", async function () {
+  const isDisabled = await isBookButtonDisabled(this.page);
   expect(isDisabled).to.be.true;
 });

@@ -1,60 +1,49 @@
-const { clickElement, getText } = require("./lib/commands.js");
+const {
+  openSeance,
+  selectFreeSeat,
+  clickBookButton,
+  isBookButtonDisabled,
+  getTicketTitle,
+} = require("./lib/booking.js");
+
+const URL = "http://qamid.tmweb.ru/client/index.php";
+const TICKET_TITLE = "Вы выбрали билеты:";
 
 let page;
 
 describe("ИдёмВКино - Тесты бронирования билетов", () => {
   beforeEach(async () => {
     page = await browser.newPage();
-    page.setDefaultNavigationTimeout(60000);
-    page.setDefaultTimeout(60000);
-    await page.goto("http://qamid.tmweb.ru/client/index.php");
-  }, 60000);
+    page.setDefaultTimeout(15000);
+    page.setDefaultNavigationTimeout(30000);
+    await page.goto(URL);
+  });
 
   afterEach(async () => {
     if (page) {
       await page.close();
     }
-  }, 60000);
+  });
 
   test("Happy Path 1: Успешное бронирование 1 обычного места", async () => {
-    await clickElement(page, "nav.page-nav a:nth-child(2)");
-    await clickElement(page, ".movie-seances__time");
-    
-    const seatSelector = ".buying-scheme__chair_standart:not(.buying-scheme__chair_taken)";
-    await page.waitForSelector(seatSelector);
-    await clickElement(page, seatSelector);
-    
-    const buttonSelector = "button.acceptin-button";
-    await page.waitForSelector(buttonSelector);
-    await clickElement(page, buttonSelector);
+    await openSeance(page, 2);
 
-    const actualText = await getText(page, ".ticket__check-title");
-    expect(actualText).toContain("Вы выбрали билеты:");
-  }, 60000);
+    await selectFreeSeat(page, "standart");
+    await clickBookButton(page);
+    expect(await getTicketTitle(page)).toContain(TICKET_TITLE);
+  });
 
   test("Happy Path 2: Успешное бронирование VIP места", async () => {
-    await clickElement(page, "nav.page-nav a:nth-child(2)");
-    await clickElement(page, ".movie-seances__time");
-    
-    const seatSelector = ".buying-scheme__chair_vip:not(.buying-scheme__chair_taken)";
-    await page.waitForSelector(seatSelector);
-    await clickElement(page, seatSelector);
-    
-    const buttonSelector = "button.acceptin-button";
-    await page.waitForSelector(buttonSelector);
-    await clickElement(page, buttonSelector);
+    await openSeance(page, 2);
+    await selectFreeSeat(page, "vip");
+    await clickBookButton(page);
 
-    const actualText = await getText(page, ".ticket__check-title");
-    expect(actualText).toContain("Вы выбрали билеты:");
-  }, 60000);
+    expect(await getTicketTitle(page)).toContain(TICKET_TITLE);
+  });
 
   test("Sad Path: Кнопка забронировать недоступна без выбора места", async () => {
-    await clickElement(page, "nav.page-nav a:nth-child(2)");
-    await clickElement(page, ".movie-seances__time");
-
-    const buttonSelector = "button.acceptin-button";
-    await page.waitForSelector(buttonSelector); // Ждем отрисовки кнопки
-    const isDisabled = await page.$eval(buttonSelector, (btn) => btn.disabled);
+    await openSeance(page, 2);
+    const isDisabled = await isBookButtonDisabled(page);
     expect(isDisabled).toBe(true);
-  }, 60000);
+  });
 });

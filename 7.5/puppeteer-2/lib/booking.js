@@ -1,13 +1,13 @@
 const { clickElement, getText } = require("./commands.js");
 
 const SELECTORS = {
-  day: (number) => nav.page-nav a:nth-child(${number}),
+  day: (number) => `nav.page-nav a:nth-child(${number})`,
   chosenDayClass: ".page-nav__day_chosen",
   seance: ".movie-seances__time",
 
   hallScheme: ".buying-scheme__chair_standart, .buying-scheme__chair_vip",
   freeSeat: (type) =>
-    .buying-scheme__chair_${type}:not(.buying-scheme__chair_taken),
+    `.buying-scheme__chair_${type}:not(.buying-scheme__chair_taken)`,
   bookButton: "button.acceptin-button",
   ticketTitle: ".ticket__check-title",
 };
@@ -16,7 +16,7 @@ async function openSeance(page, day = 2) {
   const daySelector = SELECTORS.day(day);
   await clickElement(page, daySelector);
 
-  await page.waitForSelector(${daySelector}${SELECTORS.chosenDayClass});
+  await page.waitForSelector(`${daySelector}${SELECTORS.chosenDayClass}`);
   await clickElement(page, SELECTORS.seance);
   await page.waitForSelector(SELECTORS.hallScheme);
 }
@@ -31,12 +31,11 @@ async function clickBookButton(page) {
 
 async function isBookButtonDisabled(page) {
   try {
-    await page.waitForSelector(${SELECTORS.bookButton}[disabled], {
+    await page.waitForSelector(`${SELECTORS.bookButton}[disabled]`, {
       timeout: 5000,
     });
     return true;
   } catch (error) {
-
     if (error.name !== "TimeoutError") {
       throw error;
     }

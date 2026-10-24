@@ -1,32 +1,23 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add("getUsers", () => {
+  return cy.request({ method: "GET", url: "/users" });
+});
 
-Cypress.Commands.add("login", (login, password) => {
-  cy.contains("Log in").click();
-  cy.get("#mail").type(login);
-  cy.get("#pass").type(password);
-  cy.contains("Submit").click();
+Cypress.Commands.add("getUser", (id, options = {}) => {
+  return cy.request({ method: "GET", url: `/users/${id}`, ...options });
+});
+
+Cypress.Commands.add("createUser", (user) => {
+  return cy.request({ method: "POST", url: "/users", body: user });
+});
+
+Cypress.Commands.add("updateUser", (id, { firstName, surName }) => {
+  return cy.request({
+    method: "PUT",
+    url: `/users/${id}`,
+    qs: { firstName, surName },
+  });
+});
+
+Cypress.Commands.add("deleteUser", (id) => {
+  return cy.request({ method: "DELETE", url: `/users/${id}` });
 });

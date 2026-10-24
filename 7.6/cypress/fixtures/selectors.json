@@ -1,0 +1,22 @@
+{
+  "client": {
+    "headerTitle": "h1.page-header__title",
+    "days": "nav.page-nav a.page-nav__day",
+    "chosenDayClass": "page-nav__day_chosen",
+    "movie": ".movie",
+    "movieTitle": ".movie__title",
+    "hallBlock": ".movie-seances__hall",
+    "hallTitle": ".movie-seances__hall-title",
+    "seance": ".movie-seances__time",
+    "hallScheme": ".buying-scheme__chair_standart, .buying-scheme__chair_vip",
+    "freeSeat": ".buying-scheme__chair_standart:not(.buying-scheme__chair_taken), .buying-scheme__chair_vip:not(.buying-scheme__chair_taken)",
+    "bookButton": "button.acceptin-button",
+    "ticketTitle": ".ticket__check-title"
+  },
+  "admin": {
+    "emailInput": "input[type='email']",
+    "passwordInput": "input[type='password']",
+    "submitButton": "input[type='submit']",
+    "hallListItem": "ul.conf-step__list li"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "happy": {
+    "email": "qamid@qamid.ru",
+    "password": "qamid"
+  },
+  "sadWrongPassword": {
+    "email": "qamid@qamid.ru",
+    "password": "wrong-password",
+    "errorText": "Ошибка авторизации!"
+  },
+  "sadUnknownUser": {
+    "email": "nobody@example.com",
+    "password": "qamid",
+    "errorText": "Ошибка авторизации!"
+  }
+}

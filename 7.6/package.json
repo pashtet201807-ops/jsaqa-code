@@ -1,14 +1,17 @@
 {
-  "name": "cypress-test",
+  "name": "cypress-api-tests",
   "version": "1.0.0",
-  "description": "first tests with Cypress",
+  "description": "API tests for the springmvc users service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress run",
+    "test:record": "cypress run --record",
+    "open": "cypress open"
   },
-  "author": "OM",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "dependencies": {
-    "cypress": "^8.3.0"
+  "devDependencies": {
+    "cypress": "^16.1.1"
   }
 }
